@@ -1,24 +1,13 @@
 require('dotenv').config();
 
 const express = require('express');
-const http = require('http');
-const path = require('path');
-
 const app = express();
-
-const server = http.createServer(app);
-
-app.set('view engine', 'ejs');
-app.set('views', path.resolve(__dirname, 'templates'));
-
 app.get('/', (req, res) => {
-    res.render('useless');
+    res.sendFile("index.html");
 });
-
 const port = process.env.PORT || 10000;
-
-server.listen(port, () => {
-    console.log(`Monitor server started at ${port}`);
+app.listen(port, () => {
+    console.log(`Server started at ${port}`);
 });
 
 const brain = require('brain.js');
