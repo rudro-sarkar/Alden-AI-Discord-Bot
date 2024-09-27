@@ -1,14 +1,21 @@
 require('dotenv').config();
 
 const express = require('express');
+const http = require('http');
+const path = require('path');
+
 const app = express();
+
+const server = http.createServer(app);
+
+app.set('view engine', 'ejs');
+app.set('views', path.resolve(__dirname, 'templates'));
+
 app.get('/', (req, res) => {
-    res.sendFile("index.html");
+    res.render('useless');
 });
+
 const port = process.env.PORT || 10000;
-app.listen(port, () => {
-    console.log(`Server started at ${port}`);
-});
 
 const brain = require('brain.js');
 const fs = require('fs');
@@ -31,7 +38,7 @@ const trainOptions = {
     learningRate: 0.05
   };
 
-const saveTrainingData = () => {
+function saveTrainingData() {
     fs.writeFileSync('training-data.json', JSON.stringify(trainingData, null, 2));
 }
 
@@ -103,13 +110,23 @@ client.on('messageCreate', message => {
 });
 
 const bot_token = process.env.BOT_TOKEN;
-client.login(bot_token);
+client.login(bot_token).then(() => {
 
-if (fs.existsSync('training-data.json')) {
-    trainingData = JSON.parse(fs.readFileSync('training-data.json', 'utf-8'));
-    console.log('started initial training ....');
-    under_training = true;
-    net.train(trainingData, trainOptions);
-    under_training = false;
-    console.log('initial training completed');
-}
+    console.log('Preparing to start the initial training');
+    setTimeout(() => {
+        if (fs.existsSync('training-data.json')) {
+            trainingData = JSON.parse(fs.readFileSync('training-data.json', 'utf-8'));
+            console.log('started initial training ....');
+            under_training = true;
+            net.train(trainingData, trainOptions);
+            under_training = false;
+            console.log('initial training completed');
+        }
+        console.log("Process ended to with exit code 0");
+    }, 8000);
+
+});
+
+server.listen(port, () => {
+    console.log(`Monitor server started at ${port}`);
+});
