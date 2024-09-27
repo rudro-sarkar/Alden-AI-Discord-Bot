@@ -8,11 +8,8 @@ const app = express();
 
 const server = http.createServer(app);
 
-app.set('view engine', 'ejs');
-app.set('views', path.resolve(__dirname, 'templates'));
-
 app.get('/', (req, res) => {
-    res.render('useless');
+    res.sendFile('index.html');
 });
 
 const port = process.env.PORT || 10000;
