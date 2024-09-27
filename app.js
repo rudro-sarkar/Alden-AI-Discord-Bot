@@ -39,13 +39,6 @@ const trainOptions = {
     learningRate: 0.05
   };
 
-if (fs.existsSync('training-data.json')) {
-    trainingData = JSON.parse(fs.readFileSync('training-data.json', 'utf-8'));
-    console.log('started initial training ....');
-    net.train(trainingData, trainOptions);
-    console.log('initial training completed');
-}
-
 const saveTrainingData = () => {
     fs.writeFileSync('training-data.json', JSON.stringify(trainingData, null, 2));
 }
@@ -88,12 +81,16 @@ client.on('messageCreate', message => {
             message.reply('I am an AI model made with Brain.js! Contact Developer (discord username): ru.dro');
             return;
         }else if (content == "a!train") {
-            message.channel.send("Started training.....");
-            under_training = true;
-            net.train(trainingData, trainOptions);
-            message.channel.send(`Completed training! .... <data size = ${trainingData.length} >`);
-            under_training = false;
-            return;
+            if (under_training) {
+                message.channel.send("Already under training!");
+            }else {
+                message.channel.send("Started training.....");
+                under_training = true;
+                net.train(trainingData, trainOptions);
+                message.channel.send(`Completed training! .... <data size = ${trainingData.length} >`);
+                under_training = false;
+                return;
+            }
         }else {
             if (under_training) {
                 message.reply("AI is under training! Check logs for info.");
@@ -112,6 +109,15 @@ client.on('messageCreate', message => {
         saveTrainingData();
     }
 });
+
+if (fs.existsSync('training-data.json')) {
+    trainingData = JSON.parse(fs.readFileSync('training-data.json', 'utf-8'));
+    console.log('started initial training ....');
+    under_training = true;
+    net.train(trainingData, trainOptions);
+    under_training = false;
+    console.log('initial training completed');
+}
 
 const bot_token = process.env.BOT_TOKEN;
 client.login(bot_token);
