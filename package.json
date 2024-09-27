@@ -1,0 +1,22 @@
+{
+  "name": "alden-ai",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "start": "node app.js",
+    "dev": "nodemon app.js"
+  },
+  "author": "rudro",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "brain.js": "^1.4.10",
+    "discord.js": "^14.16.2",
+    "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
+    "express": "^4.21.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}
