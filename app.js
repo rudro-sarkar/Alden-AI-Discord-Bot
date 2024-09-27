@@ -1,9 +1,12 @@
-require('dotenv/config');
+require('dotenv').config();
 
 const express = require('express');
+const http = require('http');
 const path = require('path');
 
 const app = express();
+
+const server = http.createServer(app);
 
 app.set('view engine', 'ejs');
 app.set('views', path.resolve(__dirname, 'templates'));
@@ -12,9 +15,9 @@ app.get('/', (req, res) => {
     res.render('useless');
 });
 
-const port = process.env.PORT || 5001;
+const port = process.env.PORT || 10000;
 
-app.listen(port, () => {
+server.listen(port, () => {
     console.log(`Monitor server started at ${port}`);
 });
 
@@ -110,6 +113,9 @@ client.on('messageCreate', message => {
     }
 });
 
+const bot_token = process.env.BOT_TOKEN;
+client.login(bot_token);
+
 if (fs.existsSync('training-data.json')) {
     trainingData = JSON.parse(fs.readFileSync('training-data.json', 'utf-8'));
     console.log('started initial training ....');
@@ -118,6 +124,3 @@ if (fs.existsSync('training-data.json')) {
     under_training = false;
     console.log('initial training completed');
 }
-
-const bot_token = process.env.BOT_TOKEN;
-client.login(bot_token);
